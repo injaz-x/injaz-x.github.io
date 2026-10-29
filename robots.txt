@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://injaz-app.github.io/sitemap.xml
