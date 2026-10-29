@@ -403,13 +403,13 @@ body.lt .sh::after{opacity:.8}
 .auth-box{display:flex;flex-direction:column;gap:10px;text-align:right;padding:14px;border-radius:14px;border:1px dashed color-mix(in srgb,var(--acc) 45%,transparent);background:color-mix(in srgb,var(--acc) 7%,transparent)}
 .auth-in .row{display:flex;align-items:center}
 
-.phrow{display:flex;flex-direction:column;gap:8px}
-.phrow select{padding:12px;border-radius:12px;border:1px solid var(--line,#2a3342);background:var(--field,#161c26);color:inherit;font:inherit;font-size:15px;width:100%}
-.phin{display:flex;align-items:stretch;border-radius:12px;border:1px solid var(--line,#2a3342);background:var(--field,#161c26);overflow:hidden}
-.phin:focus-within{border-color:var(--acc);box-shadow:0 0 0 2px color-mix(in srgb,var(--acc) 35%,transparent)}
-.phcode{display:flex;align-items:center;padding:0 12px;font-weight:700;color:var(--acc);background:color-mix(in srgb,var(--acc) 12%,transparent);border-inline-end:1px solid var(--line);font-variant-numeric:tabular-nums;letter-spacing:.5px}
-.phin input{flex:1;min-width:0;border:0!important;background:transparent!important;text-align:left;outline:none;box-shadow:none!important;padding:12px}
-.phin input:focus-visible{outline:none!important}
+
+
+
+
+
+
+
 </style>
 </head>
 <body>
@@ -2253,11 +2253,11 @@ function authMarkup(mode){
   '<label class="f">كلمة المرور<input id="au-pass" type="password" dir="ltr" maxlength="72" autocomplete="'+(su?'new-password':'current-password')+'" placeholder="English only, 8+ characters" style="text-align:left"></label>'+
   (su?'':'<button class="lnk" data-a="forgot" type="button" style="background:none;border:0;color:var(--acc);padding:0;text-align:right;cursor:pointer">نسيت كلمة المرور؟</button>')+
   (su?'<label class="f">تأكيد كلمة المرور<input id="au-pass2" type="password" dir="ltr" maxlength="72" autocomplete="new-password" style="text-align:left"></label>'+
-  '<div class="auth-box"><b class="sm">وسيلة استرجاع حسابك (واحدة على الأقل)</b>'+
-  '<div class="f">رقم الهاتف'+phoneRow('au-phone','au-cc','1012345678')+'</div>'+
+  '<div class="auth-box"><b class="sm">بريدك لاسترجاع الحساب</b>'+
+  
   '<label class="f">البريد الإلكتروني<input id="au-mail" type="email" dir="ltr" maxlength="120" autocomplete="email" placeholder="you@example.com" style="text-align:left"></label>'+
-  '<p class="mut sm" style="margin:0">إن نسيت كلمة المرور تسترجع حسابك برقم هاتفك أو بريدك أو اسم المستخدم. استخدم بيانات تخصّك أنت، فهي الوسيلة الوحيدة للاسترجاع.</p></div>'+
-  '<label class="row sm" style="gap:8px;text-align:right"><input type="checkbox" id="au-agree"> أوافق على استخدام رقمي وبريدي لاسترجاع الحساب فقط.</label>':'')+
+  '<p class="mut sm" style="margin:0">إن نسيت كلمة المرور تسترجع حسابك ببريدك أو باسم المستخدم. استخدم بريداً يخصّك أنت، فهو الوسيلة الوحيدة للاسترجاع.</p></div>'+
+  '<label class="row sm" style="gap:8px;text-align:right"><input type="checkbox" id="au-agree"> أوافق على استخدام بريدي لاسترجاع الحساب فقط.</label>':'')+
   '<div class="ar-msg bad" id="au-msg" role="alert"></div>'+
   '<button class="btn big" id="au-go" data-a="authgo" data-m="'+(su?'up':'in')+'">'+(su?'إنشاء الحساب':'دخول')+'</button>'+
   '<section class="mut sm" style="margin-top:14px;text-align:right"><h2 style="font-size:1em;margin:0 0 4px">ماذا يقدّم إنجاز X؟</h2><ul style="margin:0;padding-inline-start:18px;line-height:1.7"><li>مؤقت مذاكرة وخطة أسبوعية لمواد مرحلتك</li><li>كتب الوزارة PDF لكل مرحلة: ابتدائي وإعدادي وثانوي</li><li>امتحان أسبوعي بالحلول وتدريب على كل مادة</li><li>رياضة وأكل ونوم وماء بمعايير عالمية</li><li>تحفيز يومي وعبارات تشجعك على الاستمرار</li><li>يعمل على أندرويد وآيفون والكمبيوتر وبدون إنترنت</li></ul><p style="margin:10px 0 0">اقرأ المزيد: <a href="study-timer.html">مؤقت المذاكرة</a> · <a href="ministry-books.html">كتب الوزارة</a> · <a href="weekly-exams.html">الامتحانات</a> · <a href="motivation.html">تحفيز</a> · <a href="android.html">أندرويد</a> · <a href="fitness-for-students.html">رياضة وصحة</a></p></section>'+
@@ -2280,11 +2280,9 @@ ACT.authgo=async t=>{
   if(p.length<8)return authMsg('كلمة المرور 8 أحرف على الأقل.');
   if(up&&p!==document.getElementById('au-pass2').value)return authMsg('كلمتا المرور غير متطابقتين.');
   const mail=up?(document.getElementById('au-mail').value||'').trim().toLowerCase():'';
-  const phone=up?normPhone(document.getElementById('au-phone').value,ccDial('au-cc')):'';
-  if(up){
-    if(!mail&&!phone)return authMsg('اكتب رقم هاتفك أو بريدك الإلكتروني (واحداً على الأقل) لاسترجاع الحساب.');
+    if(up){
+    if(!mail)return authMsg('اكتب بريدك الإلكتروني لاسترجاع الحساب.');
     if(mail&&!MAIL_RE.test(mail))return authMsg('البريد غير صحيح. اكتبه بالإنجليزية مثل name@example.com.');
-    if(document.getElementById('au-phone').value.trim()&&!phone)return authMsg('رقم الهاتف غير صحيح. اختر الدولة واكتب بقية الرقم.');
     if(!document.getElementById('au-agree').checked)return authMsg('وافق على استخدام بيانات الاسترجاع للمتابعة.');
   }
   if(!navigator.onLine)return authMsg('تحتاج اتصالاً بالإنترنت لتسجيل الدخول أو إنشاء الحساب.');
@@ -2294,46 +2292,25 @@ ACT.authgo=async t=>{
     if(up){r=await CLOUD.client.auth.signUp({email:CLOUD.email(u),password:p,options:{data:{username:u,name:name}}});if(r.error)throw r.error;if(!r.data.session)throw new Error('email confirm')}
     else{r=await CLOUD.client.auth.signInWithPassword({email:CLOUD.email(u),password:p});if(r.error)throw r.error}
     const user=r.data.user;
-    if(up){if(mail||phone){try{const row={username:u,user_id:r.data.user.id};if(mail)row.email=mail;if(phone)row.phone=phone;await CLOUD.client.from('user_contact').upsert(row,{onConflict:'username'})}catch(x){}}
+    if(up){if(mail){try{const row={username:u,user_id:r.data.user.id,email:mail};await CLOUD.client.from('user_contact').upsert(row,{onConflict:'username'})}catch(x){}}
       const keep=lsGet('ab:__uid');if(keep&&keep!==user.id){clearLocal()}CLOUD.user=user;lsSet('ab:profile',JSON.stringify({name:name,username:u}));lsSet('ab:__uid',user.id);CLOUD.q={profile:1};lsSet('ab:__q',JSON.stringify(CLOUD.q));if(dataKeys().length>1){dataKeys().forEach(k=>{if(!LOCAL_ONLY.includes(k))CLOUD.q[k]=1});lsSet('ab:__q',JSON.stringify(CLOUD.q))}CLOUD.start();location.reload();return}
     const res=await CLOUD.begin(user);
     if(res===true){const el=document.getElementById('auth');if(el)el.remove();authDone&&authDone(true)}
   }catch(e){t.disabled=false;authMsg(CLOUD.msg(e))}
 };
 
-const COUNTRIES='EG:مصر:20|SA:السعودية:966|AE:الإمارات:971|KW:الكويت:965|QA:قطر:974|BH:البحرين:973|OM:عُمان:968|JO:الأردن:962|LB:لبنان:961|SY:سوريا:963|IQ:العراق:964|PS:فلسطين:970|YE:اليمن:967|LY:ليبيا:218|SD:السودان:249|TN:تونس:216|DZ:الجزائر:213|MA:المغرب:212|MR:موريتانيا:222|SO:الصومال:252|DJ:جيبوتي:253|KM:جزر القمر:269|TR:تركيا:90|IR:إيران:98|PK:باكستان:92|AF:أفغانستان:93|IN:الهند:91|BD:بنغلاديش:880|ID:إندونيسيا:62|MY:ماليزيا:60|SG:سنغافورة:65|PH:الفلبين:63|TH:تايلاند:66|VN:فيتنام:84|CN:الصين:86|JP:اليابان:81|KR:كوريا الجنوبية:82|AU:أستراليا:61|NZ:نيوزيلندا:64|GB:المملكة المتحدة:44|IE:أيرلندا:353|FR:فرنسا:33|DE:ألمانيا:49|IT:إيطاليا:39|ES:إسبانيا:34|PT:البرتغال:351|NL:هولندا:31|BE:بلجيكا:32|CH:سويسرا:41|AT:النمسا:43|SE:السويد:46|NO:النرويج:47|DK:الدنمارك:45|FI:فنلندا:358|PL:بولندا:48|GR:اليونان:30|CY:قبرص:357|RO:رومانيا:40|UA:أوكرانيا:380|RU:روسيا:7|US:الولايات المتحدة:1|CA:كندا:1|MX:المكسيك:52|BR:البرازيل:55|AR:الأرجنتين:54|CL:تشيلي:56|CO:كولومبيا:57|PE:بيرو:51|ZA:جنوب أفريقيا:27|NG:نيجيريا:234|KE:كينيا:254|ET:إثيوبيا:251|GH:غانا:233|SN:السنغال:221|TZ:تنزانيا:255|UG:أوغندا:256|KZ:كازاخستان:7'.split('|').map(x=>{const a=x.split(':');return{c:a[0],n:a[1],d:a[2]}});
-const flag=c=>String.fromCodePoint(...[...c].map(ch=>127397+ch.charCodeAt(0)));
-function defCC(){try{const r=(navigator.language||'').split('-')[1];if(r&&COUNTRIES.some(x=>x.c===r.toUpperCase()))return r.toUpperCase()}catch(e){}return 'EG'}
-const ccDial=id=>{const e=document.getElementById(id),x=COUNTRIES.find(k=>k.c===(e&&e.value));return x?x.d:'20'};
-function phoneRow(inp,cc,ph){
-  const d=defCC();
-  return '<div class="phrow"><select id="'+cc+'" data-c="cc" aria-label="الدولة">'+COUNTRIES.map(x=>'<option value="'+x.c+'"'+(x.c===d?' selected':'')+'>'+flag(x.c)+' '+x.n+' (+'+x.d+')</option>').join('')+'</select>'+
-  '<div class="phin" dir="ltr"><span class="phcode" id="'+cc+'-p">+'+(COUNTRIES.find(x=>x.c===d)||COUNTRIES[0]).d+'</span><input id="'+inp+'" type="tel" inputmode="tel" maxlength="16" autocomplete="tel-national" placeholder="'+ph+'"></div></div>';
-}
-CHG.cc=t=>{const e=document.getElementById(t.id+'-p');if(e)e.textContent='+'+ccDial(t.id)};
 const toLatin=v=>String(v||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
-function normPhone(v,dial){
-  v=toLatin(v).replace(/[\s\-().]/g,'');if(!v)return '';
-  if(v[0]==='+')return /^\+[1-9]\d{7,14}$/.test(v)?v:'';
-  if(v.slice(0,2)==='00')return /^[1-9]\d{7,14}$/.test(v.slice(2))?'+'+v.slice(2):'';
-  if(!/^\d+$/.test(v))return '';
-  const n=v.replace(/^0+/,'');dial=dial||'20';
-  if(dial==='20'&&!/^1[0125]\d{8}$/.test(n))return '';
-  if(n.length<6||n.length>12||n.length+dial.length>15)return '';
-  return '+'+dial+n;
-}
-const maskPhone=p=>p.length<7?p:p.slice(0,4)+'***'+p.slice(-2);
 const MAIL_RE=/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
 const maskMail=m=>{const i=m.indexOf('@');return i<1?m:m[0]+'***'+m.slice(i-1>0?i-1:i)};
 /* ----- استرجاع كلمة المرور بكود على البريد ----- */
 let fgUser='',fgKind='user',fgVal='';
-const FG={user:{l:'اسم المستخدم',ph:'ahmed.2008',ic:'username',t:'text',m:24},email:{l:'البريد الإلكتروني',ph:'you@example.com',ic:'email',t:'email',m:120},phone:{l:'رقم الهاتف',ph:'01012345678',ic:'tel',t:'tel',m:16}};
+const FG={user:{l:'اسم المستخدم',ph:'ahmed.2008',ic:'username',t:'text',m:24},email:{l:'البريد الإلكتروني',ph:'you@example.com',ic:'email',t:'email',m:120}};
 function forgotMarkup(step,msg){
   const k=FG[fgKind];
   const first='<p class="mut">اختر وسيلة الاسترجاع، وسنرسل كوداً من 6 أرقام لمن يملك الحساب.</p>'+
     '<div class="chips auth-tabs">'+Object.keys(FG).map(x=>'<button class="chip'+(x===fgKind?' on':'')+'" data-a="fgkind" data-k="'+x+'" type="button">'+FG[x].l+'</button>').join('')+'</div>'+
-    (fgKind==='phone'?'<div class="f">'+k.l+phoneRow('fg-val','fg-cc','1012345678')+'</div>':'<label class="f">'+k.l+'<input id="fg-val" type="'+k.t+'" dir="ltr" maxlength="'+k.m+'" autocapitalize="none" autocomplete="'+k.ic+'" placeholder="'+k.ph+'" style="text-align:left"></label>');
-  const via=fgKind==='phone'?'رسالة على هاتفك':fgKind==='email'?'بريدك':'البريد أو الهاتف المربوط بحسابك';
+    '<label class="f">'+k.l+'<input id="fg-val" type="'+k.t+'" dir="ltr" maxlength="'+k.m+'" autocapitalize="none" autocomplete="'+k.ic+'" placeholder="'+k.ph+'" style="text-align:left"></label>';
+  const via=fgKind==='email'?'بريدك':'البريد المربوط بحسابك';
   const second='<p class="mut">إن كان هذا الحساب موجوداً فقد أرسلنا كوداً من 6 أرقام عبر '+via+' (راجع البريد المزعج أيضاً). أدخله مع كلمة المرور الجديدة.</p><label class="f">الكود<input id="fg-code" type="text" inputmode="numeric" dir="ltr" maxlength="8" autocomplete="one-time-code" style="text-align:left;letter-spacing:4px"></label>'+
     '<label class="f">كلمة المرور الجديدة<input id="au-pass" type="password" dir="ltr" maxlength="72" autocomplete="new-password" placeholder="English only, 8+ characters" style="text-align:left"></label><label class="f">تأكيد كلمة المرور<input id="au-pass2" type="password" dir="ltr" maxlength="72" autocomplete="new-password" style="text-align:left"></label>';
   return '<div class="auth-in"><div class="auth-logo"></div><h1>استرجاع كلمة المرور</h1>'+(step===1?first:second)+
@@ -2346,13 +2323,11 @@ ACT.fgkind=t=>{fgKind=t.dataset.k;const el=document.getElementById('auth');if(el
 ACT.fgsend=async t=>{
   const raw=(document.getElementById('fg-val').value||'').trim();let v='';
   if(fgKind==='user'){v=raw.toLowerCase();if(!/^[a-z0-9._]{3,24}$/.test(v))return authMsg('اسم المستخدم: 3 إلى 24 حرفاً إنجليزياً صغيراً أو أرقاماً أو . أو _')}
-  else if(fgKind==='email'){v=raw.toLowerCase();if(!MAIL_RE.test(v))return authMsg('اكتب بريداً صحيحاً مثل name@example.com')}
-  else{v=normPhone(raw);if(!v)return authMsg('رقم الهاتف غير صحيح. اختر الدولة واكتب بقية الرقم.')}
+  else{v=raw.toLowerCase();if(!MAIL_RE.test(v))return authMsg('اكتب بريداً صحيحاً مثل name@example.com')}
   if(!navigator.onLine)return authMsg('تحتاج اتصالاً بالإنترنت.');
   t.disabled=true;authMsg('');
   let out=null;
   try{const r=await CLOUD.client.functions.invoke('recover-contact',{body:{action:'send',kind:fgKind==='user'?'username':fgKind,value:v}});out=r&&r.data}catch(e){}
-  if(out&&out.sent===false&&out.reason==='no_sms'){t.disabled=false;return authMsg('الاسترجاع بالهاتف غير مفعّل بعد. استخدم البريد أو اسم المستخدم.')}
   if(out&&out.sent===false&&out.reason==='no_mail'){t.disabled=false;return authMsg('إرسال الكود لم يُفعَّل بعد من جهة الخدمة. حاول لاحقاً.')}
   fgVal=v;if(fgKind==='user')fgUser=v;const el=document.getElementById('auth');if(el)el.innerHTML=forgotMarkup(2);
 };
@@ -2376,7 +2351,6 @@ document.addEventListener('input',e=>{
   const t=e.target;if(!t||!t.id)return;
   if(t.id==='au-user'){const v=t.value.toLowerCase().replace(/[^a-z0-9._]/g,'');if(v!==t.value){t.value=v;authMsg('اسم المستخدم بالإنجليزية فقط: حروف صغيرة وأرقام و . و _')}else authMsg('')}
   else if(t.id==='fg-code'){const v=t.value.replace(/\D/g,'');if(v!==t.value)t.value=v}
-  else if(t.id==='au-phone'||(t.id==='fg-val'&&t.type==='tel')){const v=toLatin(t.value).replace(/[^0-9+\s\-]/g,'');if(v!==t.value)t.value=v}
   else if(t.id==='fg-val'&&t.type==='email'){const v=t.value.replace(/[^\x21-\x7E]/g,'');if(v!==t.value)t.value=v}
   else if(t.id==='fg-val'){const v=t.value.toLowerCase().replace(/[^a-z0-9._]/g,'');if(v!==t.value)t.value=v}
   else if(t.id==='au-mail'){const v=t.value.replace(/[^\x21-\x7E]/g,'');if(v!==t.value){t.value=v;authMsg('البريد بالإنجليزية فقط.')}}
