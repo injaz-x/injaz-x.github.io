@@ -618,7 +618,7 @@ const EDU={
   prim:{n:'المرحلة الابتدائية',g:[1,2,3,4,5,6],gn:g=>'الصف '+G_AR[g-1]+' الابتدائي'},
   prep:{n:'المرحلة الإعدادية',g:[1,2,3],gn:g=>'الصف '+G_AR[g-1]+' الإعدادي'},
   sec:{n:'الثانوية العامة',g:[1,2,3],gn:g=>(g===1?'الأول':g===2?'الثاني':'الثالث')+' الثانوي'},
-  bac:{n:'البكالوريا المصرية',g:[1,2,3],gn:g=>(g===1?'الأولى':g===2?'الثانية':'الثالثة')+' بكالوريا'}
+  bac:{n:'البكالوريا المصرية',g:[2,3],gn:g=>(g===2?'الثانية':'الثالثة')+' بكالوريا'}
 };
 const TRACKS={
   sec:{sci:'علمي علوم',math:'علمي رياضة',lit:'أدبي'},
@@ -637,8 +637,7 @@ function eduSubjects(e){
     else if(t==='math')L=g===2?[C.ar,C.en,C.l2,C.alg,C.calc,C.stc,C.dyn,C.phys,C.chem,C.rel]:[C.ar,C.en,C.l2,C.alg,C.calc,C.stc,C.dyn,C.phys,C.chem,C.rel];
     else L=g===2?[C.ar,C.en,C.l2,C.bio,C.chem,C.phys,C.math,C.rel]:[C.ar,C.en,C.l2,C.bio,C.chem,C.phys,C.geol,C.rel];
   }else if(st==='bac'){
-    if(g===1)L=[C.ar,C.en,C.l2,C.math,C.isci,C.ehist,C.prog,C.rel,C.fin,C.pe];
-    else if(g===2){
+    if(g<=2){
       L=[C.ar,C.en,C.ehist];
       const x={med:[C.math,C.phys],eng:[C.chem,C.prog],biz:[C.acc,C.biz],art:[C.psy,C.l2]}[t]||[];
       L=L.concat(x,[C.fin,C.pe]);
@@ -650,9 +649,9 @@ function eduSubjects(e){
   return L.map((s,i)=>Object.assign({c:PAL[i%PAL.length],e:''},s));
 }
 const profile=()=>st.get('profile',{});
-const eduOf=()=>profile().edu||null;
+const eduOf=()=>{const e=profile().edu||null;if(e&&e.stage==='bac'&&+e.grade<2){e.grade=2;if(!e.track)e.track='med'}return e};
 const eduLabel=e=>{e=e||eduOf();if(!e||!e.stage)return '';return EDU[e.stage].gn(+e.grade)+(e.track&&TRACKS[e.stage]?' · '+TRACKS[e.stage][e.track]:'')};
-const eduNeedsTrack=(s,g)=>(s==='sec'&&g>=2)||(s==='bac'&&g>=2);
+const eduNeedsTrack=(s,g)=>(s==='sec'&&g>=2)||s==='bac';
 /* المواد الفعلية للطالب = مواد المرحلة (ما عدا ما أخفاه) + ما أضافه بنفسه */
 function mySubs(){
   const e=eduOf(),off=(e&&e.off)||[];
