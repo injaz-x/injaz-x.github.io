@@ -2351,8 +2351,9 @@ ACT.fgsend=async t=>{
   if(!navigator.onLine)return authMsg('تحتاج اتصالاً بالإنترنت.');
   t.disabled=true;authMsg('');
   let out=null;
-  try{const r=await CLOUD.client.functions.invoke(fgKind==='user'?'recover':'recover-contact',{body:fgKind==='user'?{action:'send',username:v}:{action:'send',kind:fgKind,value:v}});out=r&&r.data}catch(e){}
+  try{const r=await CLOUD.client.functions.invoke('recover-contact',{body:{action:'send',kind:fgKind==='user'?'username':fgKind,value:v}});out=r&&r.data}catch(e){}
   if(out&&out.sent===false&&out.reason==='no_sms'){t.disabled=false;return authMsg('الاسترجاع بالهاتف غير مفعّل بعد. استخدم البريد أو اسم المستخدم.')}
+  if(out&&out.sent===false&&out.reason==='no_mail'){t.disabled=false;return authMsg('إرسال الكود لم يُفعَّل بعد من جهة الخدمة. حاول لاحقاً.')}
   fgVal=v;if(fgKind==='user')fgUser=v;const el=document.getElementById('auth');if(el)el.innerHTML=forgotMarkup(2);
 };
 ACT.fgreset=async t=>{
@@ -2363,16 +2364,9 @@ ACT.fgreset=async t=>{
   if(p!==document.getElementById('au-pass2').value)return authMsg('كلمتا المرور غير متطابقتين.');
   t.disabled=true;authMsg('');
   try{
-    let usr;
-    if(fgKind==='user'){
-      const v=await CLOUD.client.auth.verifyOtp({email:CLOUD.email(fgUser),token:code,type:'recovery'});
-      if(v.error||!v.data||!v.data.user)throw new Error('badcode');
-      const up=await CLOUD.client.auth.updateUser({password:p});if(up.error)throw up.error;usr=v.data.user;
-    }else{
-      const r=await CLOUD.client.functions.invoke('recover-contact',{body:{action:'reset',kind:fgKind,value:fgVal,code:code,password:p}});
-      if(r.error||!r.data||!r.data.email)throw new Error('badcode');
-      const si=await CLOUD.client.auth.signInWithPassword({email:r.data.email,password:p});if(si.error)throw si.error;usr=si.data.user;
-    }
+    const r=await CLOUD.client.functions.invoke('recover-contact',{body:{action:'reset',kind:fgKind==='user'?'username':fgKind,value:fgVal,code:code,password:p}});
+    if(r.error||!r.data||!r.data.email)throw new Error('badcode');
+    const si=await CLOUD.client.auth.signInWithPassword({email:r.data.email,password:p});if(si.error)throw si.error;const usr=si.data.user;
     const res=await CLOUD.begin(usr);
     if(res===true){const el=document.getElementById('auth');if(el)el.remove();authDone&&authDone(true);toast('تم تغيير كلمة المرور')}
   }catch(e){t.disabled=false;authMsg(e&&e.message==='badcode'?'الكود غير صحيح أو انتهت صلاحيته. اطلب كوداً جديداً.':CLOUD.msg(e))}
