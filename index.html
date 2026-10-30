@@ -474,6 +474,26 @@ body.lt .card{box-shadow:0 1px 0 rgba(25,35,55,.05)}
 .btn.big{box-shadow:none}
 nav#tabs{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--navbg,#0b1533)}
 .tab.on{background:color-mix(in srgb,var(--acc) 12%,transparent)}
+
+/* ===== معايير عالمية للهاتف: أهداف لمس 44px (Apple HIG/WCAG 2.5.5)، نص لا يقل عن 12px ===== */
+@media(max-width:700px){
+  .xl{display:none!important}
+  button,.btn,select,input:not([type=checkbox]):not([type=radio]):not([type=range]){min-height:44px}
+  .btn.s{min-height:44px;padding:6px 14px}
+  .ib{width:44px;height:44px}
+  input[type=checkbox]{width:26px;height:26px}
+  .pill{font-size:.78rem}
+  .ringbox small,.ringbox .mut,.tab,.mut.sm,small{font-size:max(12px,.78rem)}
+  .tb input,.tb select,.tl .btn{min-height:40px}
+}
+:is(button,input,select,textarea,a,label.btn):focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+@media(max-width:700px){
+  .chip{min-height:44px;padding-inline:14px}
+  .x{min-width:44px;min-height:44px}
+  input[type=range]{min-height:44px}
+  small,.bars small,.bars .bl,.bars span{font-size:12px!important}
+}
 </style>
 </head>
 <body>
@@ -937,9 +957,11 @@ function buildShell(){
   $('#main').innerHTML=SEC.map((s,i)=>'<section class="sec" id="s-'+s.id+'" data-sec="'+s.id+'" aria-label="'+s.n+'" style="--sc:'+s.c+'"><div class="sh"><div class="emb"></div><div><div class="eyb"><b>'+dg(i+1)+'</b><span>'+dg(SEC.length)+'</span></div><h2>'+s.n+'</h2><p class="mut">'+s.sub+'</p></div></div><div id="b-'+s.id+'"></div></section>').join('');
 }
 ACT.more=()=>sheet('<h3>كل الأقسام</h3><div class="moregrid">'+SEC.map(s=>tabBtn(s,s.id===curSec?' on':'')).join('')+'</div>');
+/* هاتف: إخفاء الشروحات الطويلة، تبقى الأساسيات فقط */
+function declutter(el){if(!matchMedia('(max-width:700px)').matches)return;el.querySelectorAll('.mut.sm,p.mut,.sm.mut').forEach(e=>{if(e.textContent.trim().length>45&&!e.closest('li,table,.row.sp,.ringbox,.hero,.warn'))e.classList.add('xl')})}
 function renderSec(id){
   id=id||curSec;const f=RD[id];if(!f)return;const el=$('#b-'+id);if(!el)return;
-  const keep=window.scrollY;el.innerHTML=f();if(PO[id])PO[id]();animRings();if(keep&&id===curSec)window.scrollTo(0,keep);
+  const keep=window.scrollY;el.innerHTML=f();if(PO[id])PO[id]();declutter(el);animRings();if(keep&&id===curSec)window.scrollTo(0,keep);
 }
 function go(id){
   if(!SEC.find(s=>s.id===id))id='home';
