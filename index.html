@@ -464,6 +464,16 @@ body.lt .sh::after{opacity:.8}
   .card.fold:not(.open)>*:not(h3){display:none}
   .card.fold{padding-block:12px}
 }
+
+/* ===== لمسة يدوية: بلا توهّج ولا تدرّجات ولا زجاج (كل الشاشات) ===== */
+.card{backdrop-filter:none;-webkit-backdrop-filter:none;border-radius:12px;box-shadow:none}
+body.lt .card{box-shadow:0 1px 0 rgba(25,35,55,.05)}
+.sh::after{height:3px;width:44px;border-radius:2px;background:var(--acc);opacity:1;inset-inline:auto;inset-inline-start:0}
+.eico{background:color-mix(in srgb,var(--acc) 13%,transparent);border:1px solid color-mix(in srgb,var(--acc) 34%,transparent);box-shadow:none;border-radius:14px}
+.btn:not(.g):not(.ib):not(.d){background:var(--acc);color:var(--onacc)}
+.btn.big{box-shadow:none}
+nav#tabs{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--navbg,#0b1533)}
+.tab.on{background:color-mix(in srgb,var(--acc) 12%,transparent)}
 </style>
 </head>
 <body>
@@ -821,6 +831,11 @@ const SEC=[
 const secOf=id=>SEC.find(s=>s.id===id)||SEC[0];
 
 /* ========== الخلفيات: هادئة وحديثة وبلا حركة ========== */
+/* خلفية مسطحة بحبيبات ورق ناعمة: بلا توهّج ولا نقاط ولا تدرّجات */
+function grainBg(lt){
+  const c=lt?'0%200%200%200%200%200%200%200%200%200%200%200%200%200.045%200':'1%200%200%200%200%201%200%200%200%201%200%200%200%200.05%200%200';
+  return "url(\"data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%27220%27%20height=%27220%27%3E%3Cfilter%20id=%27n%27%3E%3CfeTurbulence%20type=%27fractalNoise%27%20baseFrequency=%27.85%27%20numOctaves=%272%27%20stitchTiles=%27stitch%27/%3E%3CfeColorMatrix%20values=%27"+(lt?'0%200%200%200%20.1%200%200%200%200%20.12%200%200%200%200%20.16%200%200%200%20.07%200':'0%200%200%200%201%200%200%200%200%201%200%200%200%200%201%200%200%200%20.045%200')+"%27/%3E%3C/filter%3E%3Crect%20width=%27100%25%27%20height=%27100%25%27%20filter=%27url%28%23n%29%27/%3E%3C/svg%3E\") 0 0/220px 220px,";
+}
 const SKINS=[
   {id:'night',n:'ليل هادئ',g:'dark',tc:'#0b1533',bg:"radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.3px) 0 0/22px 22px,radial-gradient(80% 55% at 85% -10%,rgba(36,102,224,.28),transparent 62%),radial-gradient(70% 50% at 0% 110%,rgba(255,200,61,.06),transparent 60%),#0b1533"},
   {id:'ink',n:'أزرق حبري',g:'dark',tc:'#0d1520',bg:"radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.3px) 0 0/22px 22px,radial-gradient(80% 55% at 15% -10%,rgba(110,150,230,.14),transparent 62%),#0d1520"},
@@ -830,7 +845,7 @@ const SKINS=[
   {id:'mist',n:'ضباب فاتح',g:'light',lt:1,tc:'#eef1f5',bg:"radial-gradient(rgba(20,30,50,.10) 1px,transparent 1.3px) 0 0/22px 22px,radial-gradient(80% 55% at 85% -10%,rgba(138,164,240,.14),transparent 62%),#eef1f5"},
   {id:'linen',n:'كتان دافئ',g:'light',lt:1,tc:'#f3efe6',bg:"radial-gradient(rgba(20,30,50,.10) 1px,transparent 1.3px) 0 0/22px 22px,radial-gradient(80% 55% at 15% -10%,rgba(224,185,112,.16),transparent 62%),#f3efe6"},
   {id:'sky',n:'سماء باهتة',g:'light',lt:1,tc:'#e9f1f6',bg:"radial-gradient(rgba(20,30,50,.10) 1px,transparent 1.3px) 0 0/22px 22px,radial-gradient(80% 55% at 85% -10%,rgba(127,191,174,.16),transparent 62%),#e9f1f6"}
-].map(o=>Object.assign({acc2:'#7fbfae'},o));
+].map(o=>Object.assign({acc2:'#7fbfae'},o)).map(o=>Object.assign(o,{bg:grainBg(o.lt)+o.tc}));
 let bgUrl='',skinId='',skinFlip=false,curSec='home';
 function skinIdFor(sec){const b=cfg.bg;return b.mode==='fixed'?b.fixed:(b.per[sec]||secOf(sec).skin)}
 function applySkin(sec){
